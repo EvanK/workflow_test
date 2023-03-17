@@ -52,9 +52,14 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           commit-message: '[create-pull-request] Copied ${{ inputs.appName }} from ${{ inputs.fromEnv }} to ${{ inputs.toEnv }}'
-          branch: create-pull-request/${{ inputs.appName }}--${{ inputs.fromEnv }}-${{ inputs.toEnv }}
+          branch: create-pull-request/${{ inputs.appName }}/${{ inputs.fromEnv }}-${{ inputs.toEnv }}
           delete-branch: true
-        #   branch-suffix: random | timestamp | short-commit-hash
-        #   base: main
-          title: '[Automated] Copying ${{ inputs.appName }} from ${{ inputs.fromEnv }} to ${{ inputs.toEnv }}'
-        #   body: Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action
+          base: main
+          title: '[Auto] Copy of "${{ inputs.appName }}" from ${{ inputs.fromEnv }} to ${{ inputs.toEnv }}'
+          body: |
+            Automated copy of application `${{ inputs.appName }}`
+
+            > Initiated by ${{ github.actor }}
+
+            - From source environment of "${{ inputs.fromEnv }}"
+            - To target environment of "${{ inputs.toEnv }}"
