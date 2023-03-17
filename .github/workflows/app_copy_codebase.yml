@@ -73,4 +73,6 @@ jobs:
 
       # Tag with the commit sha (maybe something more useful later)
       - name: Tag Generated Commit
-        run: git tag ${{ steps.cpr.outputs.pull-request-head-sha }}
+        run: |
+          git tag tagged-${{ steps.cpr.outputs.pull-request-head-sha }}
+          git push origin tagged-${{ steps.cpr.outputs.pull-request-head-sha }}
