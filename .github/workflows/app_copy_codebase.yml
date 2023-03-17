@@ -55,6 +55,7 @@ jobs:
 
       # Roll changes into a new pull request
       - name: Create Pull Request
+        id: cpr
         uses: peter-evans/create-pull-request@v4
         with:
           commit-message: '[create-pull-request] Copied ${{ inputs.appName }} from ${{ inputs.fromEnv }} to ${{ inputs.toEnv }}'
@@ -67,5 +68,9 @@ jobs:
 
             > Initiated by ${{ github.actor }}
 
-            - From source environment of "${{ inputs.fromEnv }}"
-            - To target environment of "${{ inputs.toEnv }}"
+            - From source environment of "${{ inputs.fromEnv }}", in path `${{ env.SOURCE_PATH }}`
+            - To target environment of "${{ inputs.toEnv }}", in path `${{ env.TARGET_PATH }}`
+
+      # Tag with the commit sha (maybe something more useful later)
+      - name: Tag Generated Commit
+        run: git tag ${{ steps.cpr.outputs.pull-request-head-sha }}
