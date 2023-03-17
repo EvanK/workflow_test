@@ -77,7 +77,7 @@ jobs:
             - From source environment of "${{ inputs.fromEnv }}", in path `${{ env.SOURCE_PATH }}`
             - To target environment of "${{ inputs.toEnv }}", in path `${{ env.TARGET_PATH }}`
 
-      # # (Optional) Tag with the commit sha (maybe something more useful later)
+      # # (Optional) Tag with the current date/time
       # - name: Tag Generated Commit
       #   run: |
       #     git tag ${{ steps.tag.outputs.tag }}
