@@ -1,0 +1,52 @@
+on:
+  workflow_dispatch:
+    inputs:
+      appName:
+        description: 'App Base Name'
+        required: true
+        type: choice
+        options:
+        - 'MyApp/MyApp'
+        - 'YourApp/YourApp'
+      fromEnv:
+        description: 'Source Environment'
+        required: true
+        default: 'Dev'
+        type: choice
+        options:
+        - 'Dev'
+        - 'Staging'
+        - 'Sandbox'
+      toEnv:
+        description: 'Target Environment'
+        required: true
+        type: choice
+        options:
+        - 'Staging'
+        - 'Sandbox'
+        - 'Prod'
+jobs:
+  copy-app-codebase:
+    runs-on: ubuntu-latest
+    steps:
+      # checkout current main branch
+      - uses: actions/checkout@v3
+
+      # Copy entire app from source to target
+      - name: Copy app files from source to target env
+        run: |
+          cp -a \
+          apps/${{ inputs.appName }}_{{ inputs.fromEnv }} \
+          apps/${{ inputs.appName }}${{ inputs.toEnv == 'Prod' && '' || '_' }}${{ inputs.toEnv == 'Prod' && '' || inputs.toEnv }}
+
+      # Roll changes into a new pull request
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        # with:
+        #   commit-message: '[create-pull-request] automated change'
+        #   branch: create-pull-request/patch
+        #   delete-branch: false
+        #   branch-suffix: random | timestamp | short-commit-hash
+        #   base: main
+        #   title: Changes by create-pull-request action
+        #   body: Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action
