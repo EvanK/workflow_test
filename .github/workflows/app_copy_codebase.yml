@@ -15,17 +15,17 @@ on:
         default: 'Dev'
         type: choice
         options:
-        - 'Dev'
-        - 'Staging'
-        - 'Sandbox'
+        - Dev
+        - Staging
+        - Sandbox
       toEnv:
         description: 'Target Environment'
         required: true
         type: choice
         options:
-        - 'Staging'
-        - 'Sandbox'
-        - 'Prod'
+        - Staging
+        - Sandbox
+        - Production
 permissions:
   contents: write
   pull-requests: write
@@ -33,9 +33,15 @@ jobs:
   copy-app-codebase:
     env:
       SOURCE_PATH: apps/${{ inputs.appName }}/${{ inputs.appName }}_${{ inputs.fromEnv }}
-      TARGET_PATH: apps/${{ inputs.appName }}/${{ inputs.appName }}${{ inputs.toEnv == 'Prod' && '' || '_' }}${{ inputs.toEnv == 'Prod' && '' || inputs.toEnv }}
+      TARGET_PATH: apps/${{ inputs.appName }}/${{ inputs.appName }}${{ inputs.toEnv != 'Prod' && '_' || '' }}${{ inputs.toEnv != 'Prod' && inputs.toEnv || '' }}
     runs-on: ubuntu-latest
     steps:
+      # Some debugging output
+      - run: echo ${{ inputs.fromEnv }}
+      - run: echo ${{ inputs.toEnv }}
+      - run: echo ${{ env.SOURCE_PATH }}
+      - run: echo ${{ env.TARGET_PATH }}
+
       # checkout current main branch
       - uses: actions/checkout@v3
 
