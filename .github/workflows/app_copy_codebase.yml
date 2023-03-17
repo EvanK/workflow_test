@@ -25,6 +25,9 @@ on:
         - 'Staging'
         - 'Sandbox'
         - 'Prod'
+permissions:
+  contents: write
+  pull-requests: write
 jobs:
   copy-app-codebase:
     runs-on: ubuntu-latest
