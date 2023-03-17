@@ -36,17 +36,17 @@ jobs:
       TARGET_PATH: apps/${{ inputs.appName }}/${{ inputs.appName }}${{ inputs.toEnv != 'Production' && '_' || '' }}${{ inputs.toEnv != 'Production' && inputs.toEnv || '' }}
     runs-on: ubuntu-latest
     steps:
-      # Get date pieces as outputs
-      - id: date
-        run: |
-          echo "::set-output name=year::$(date +'%Y')"
-          echo "::set-output name=month::$(date +'%m')"
-          echo "::set-output name=day::$(date +'%d')"
-          echo "::set-output name=second::$(date +'%s')"
-      # Assemble them into a semver-style tag for later use
-      - id: tag
-        run: |
-          echo "::set-output name=tag::${{ format('{0}.{1}.{2}.{3}', steps.date.outputs.year, steps.date.outputs.month, steps.date.outputs.day, steps.date.outputs.second) }}"
+      # # (Optional) Get date pieces as outputs
+      # - id: date
+      #   run: |
+      #     echo "::set-output name=year::$(date +'%Y')"
+      #     echo "::set-output name=month::$(date +'%m')"
+      #     echo "::set-output name=day::$(date +'%d')"
+      #     echo "::set-output name=second::$(date +'%s')"
+      # # (Optional) Assemble them into a semver-style tag for later use
+      # - id: tag
+      #   run: |
+      #     echo "::set-output name=tag::${{ format('{0}.{1}.{2}.{3}', steps.date.outputs.year, steps.date.outputs.month, steps.date.outputs.day, steps.date.outputs.second) }}"
 
       # checkout current main branch
       - uses: actions/checkout@v3
@@ -76,9 +76,8 @@ jobs:
 
             - From source environment of "${{ inputs.fromEnv }}", in path `${{ env.SOURCE_PATH }}`
             - To target environment of "${{ inputs.toEnv }}", in path `${{ env.TARGET_PATH }}`
-            - Tagged as `${{ steps.tag.outputs.tag }}`
 
-      # Tag with the commit sha (maybe something more useful later)
+      # # (Optional) Tag with the commit sha (maybe something more useful later)
       # - name: Tag Generated Commit
       #   run: |
       #     git tag ${{ steps.tag.outputs.tag }}
