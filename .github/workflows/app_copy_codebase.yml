@@ -6,8 +6,8 @@ on:
         required: true
         type: choice
         options:
-        - 'MyApp/MyApp'
-        - 'YourApp/YourApp'
+        - 'MyApp'
+        - 'YourApp'
       fromEnv:
         description: 'Source Environment'
         required: true
@@ -35,21 +35,25 @@ jobs:
       # checkout current main branch
       - uses: actions/checkout@v3
 
+      # Remove target app entirely
+      - name: Copy app files from source to target env
+        run: rm -rf ./apps/${{ inputs.appName }}/${{ inputs.appName }}${{ inputs.toEnv == 'Prod' && '' || '_' }}${{ inputs.toEnv == 'Prod' && '' || inputs.toEnv }}
+
       # Copy entire app from source to target
       - name: Copy app files from source to target env
         run: |
           cp -a \
-          apps/${{ inputs.appName }}_${{ inputs.fromEnv }}/ \
-          apps/${{ inputs.appName }}${{ inputs.toEnv == 'Prod' && '' || '_' }}${{ inputs.toEnv == 'Prod' && '' || inputs.toEnv }}/
+          apps/${{ inputs.appName }}/${{ inputs.appName }}_${{ inputs.fromEnv }} \
+          apps/${{ inputs.appName }}/${{ inputs.appName }}${{ inputs.toEnv == 'Prod' && '' || '_' }}${{ inputs.toEnv == 'Prod' && '' || inputs.toEnv }}
 
       # Roll changes into a new pull request
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
-          commit-message: '[create-pull-request] Copying ${{ inputs.appName }} from ${{ inputs.fromEnv }} to ${{ inputs.toEnv }}'
-          branch: create-pull-request/${{ inputs.appName }}-${{ inputs.fromEnv }}-${{ inputs.toEnv }}
+          commit-message: '[create-pull-request] Copied ${{ inputs.appName }} from ${{ inputs.fromEnv }} to ${{ inputs.toEnv }}'
+          branch: create-pull-request/${{ inputs.appName }}--${{ inputs.fromEnv }}-${{ inputs.toEnv }}
           delete-branch: true
         #   branch-suffix: random | timestamp | short-commit-hash
-          base: main
-          title: Copying ${{ inputs.appName }} from ${{ inputs.fromEnv }} to ${{ inputs.toEnv }}
+        #   base: main
+          title: '[Automated] Copying ${{ inputs.appName }} from ${{ inputs.fromEnv }} to ${{ inputs.toEnv }}'
         #   body: Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action
