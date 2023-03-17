@@ -1,3 +1,4 @@
+name: "Copy App Between Environments"
 on:
   workflow_dispatch:
     inputs:
@@ -30,6 +31,9 @@ permissions:
   pull-requests: write
 jobs:
   copy-app-codebase:
+    env:
+      SOURCE_PATH: apps/${{ inputs.appName }}/${{ inputs.appName }}_${{ inputs.fromEnv }}
+      TARGET_PATH: apps/${{ inputs.appName }}/${{ inputs.appName }}${{ inputs.toEnv == 'Prod' && '' || '_' }}${{ inputs.toEnv == 'Prod' && '' || inputs.toEnv }}
     runs-on: ubuntu-latest
     steps:
       # checkout current main branch
@@ -37,14 +41,11 @@ jobs:
 
       # Remove target app entirely
       - name: Copy app files from source to target env
-        run: rm -rf ./apps/${{ inputs.appName }}/${{ inputs.appName }}${{ inputs.toEnv == 'Prod' && '' || '_' }}${{ inputs.toEnv == 'Prod' && '' || inputs.toEnv }}
+        run: rm -rf ./${{ env.TARGET_PATH }}
 
       # Copy entire app from source to target
       - name: Copy app files from source to target env
-        run: |
-          cp -a \
-          apps/${{ inputs.appName }}/${{ inputs.appName }}_${{ inputs.fromEnv }} \
-          apps/${{ inputs.appName }}/${{ inputs.appName }}${{ inputs.toEnv == 'Prod' && '' || '_' }}${{ inputs.toEnv == 'Prod' && '' || inputs.toEnv }}
+        run: cp -a ./${{ env.SOURCE_PATH }} ./${{ env.TARGET_PATH }}
 
       # Roll changes into a new pull request
       - name: Create Pull Request
