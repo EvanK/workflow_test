@@ -36,7 +36,7 @@ jobs:
       - name: Copy app files from source to target env
         run: |
           cp -a \
-          apps/${{ inputs.appName }}_{{ inputs.fromEnv }} \
+          apps/${{ inputs.appName }}_${{ inputs.fromEnv }} \
           apps/${{ inputs.appName }}${{ inputs.toEnv == 'Prod' && '' || '_' }}${{ inputs.toEnv == 'Prod' && '' || inputs.toEnv }}
 
       # Roll changes into a new pull request
