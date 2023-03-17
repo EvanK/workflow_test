@@ -33,7 +33,7 @@ jobs:
   copy-app-codebase:
     env:
       SOURCE_PATH: apps/${{ inputs.appName }}/${{ inputs.appName }}_${{ inputs.fromEnv }}
-      TARGET_PATH: apps/${{ inputs.appName }}/${{ inputs.appName }}${{ inputs.toEnv != 'Prod' && '_' || '' }}${{ inputs.toEnv != 'Prod' && inputs.toEnv || '' }}
+      TARGET_PATH: apps/${{ inputs.appName }}/${{ inputs.appName }}${{ inputs.toEnv != 'Production' && '_' || '' }}${{ inputs.toEnv != 'Production' && inputs.toEnv || '' }}
     runs-on: ubuntu-latest
     steps:
       # Some debugging output
