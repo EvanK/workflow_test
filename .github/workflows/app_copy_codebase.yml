@@ -39,17 +39,17 @@ jobs:
       - name: Copy app files from source to target env
         run: |
           cp -a \
-          apps/${{ inputs.appName }}_${{ inputs.fromEnv }} \
-          apps/${{ inputs.appName }}${{ inputs.toEnv == 'Prod' && '' || '_' }}${{ inputs.toEnv == 'Prod' && '' || inputs.toEnv }}
+          apps/${{ inputs.appName }}_${{ inputs.fromEnv }}/ \
+          apps/${{ inputs.appName }}${{ inputs.toEnv == 'Prod' && '' || '_' }}${{ inputs.toEnv == 'Prod' && '' || inputs.toEnv }}/
 
       # Roll changes into a new pull request
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
-        # with:
-        #   commit-message: '[create-pull-request] automated change'
-        #   branch: create-pull-request/patch
-        #   delete-branch: false
+        with:
+          commit-message: '[create-pull-request] Copying ${{ inputs.appName }} from ${{ inputs.fromEnv }} to ${{ inputs.toEnv }}'
+          branch: create-pull-request/${{ inputs.appName }}-${{ inputs.fromEnv }}-${{ inputs.toEnv }}
+          delete-branch: true
         #   branch-suffix: random | timestamp | short-commit-hash
-        #   base: main
-        #   title: Changes by create-pull-request action
+          base: main
+          title: Copying ${{ inputs.appName }} from ${{ inputs.fromEnv }} to ${{ inputs.toEnv }}
         #   body: Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action
