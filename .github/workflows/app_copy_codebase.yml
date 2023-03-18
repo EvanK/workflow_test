@@ -72,10 +72,12 @@ jobs:
           body: |
             Automated copy of application `${{ inputs.appName }}`
 
-            > Initiated by ${{ github.actor }}
-
+            <details>
+            <summary>Initiated by ${{ github.actor }}</summary>
             - From source environment of "${{ inputs.fromEnv }}", in path `${{ env.SOURCE_PATH }}`
             - To target environment of "${{ inputs.toEnv }}", in path `${{ env.TARGET_PATH }}`
+            - Tagged `${{ steps.tag.outputs.tag }}`
+            </details>
 
       # (Optional) Tag with the current date/time
       - name: Tag Generated Commit
