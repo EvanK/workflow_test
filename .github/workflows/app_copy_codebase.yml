@@ -73,10 +73,12 @@ jobs:
             Automated copy of application `${{ inputs.appName }}`
 
             <details>
-            <summary>Initiated by ${{ github.actor }}</summary>
+            <summary>Initiated by <a href="https://github.com/${{ github.actor }}" target="_blank">${{ github.actor }}</a></summary>
+
             - From source environment of "${{ inputs.fromEnv }}", in path `${{ env.SOURCE_PATH }}`
             - To target environment of "${{ inputs.toEnv }}", in path `${{ env.TARGET_PATH }}`
             - Tagged `${{ steps.tag.outputs.tag }}`
+
             </details>
 
       # (Optional) Tag with the current date/time
